@@ -1,0 +1,17 @@
+version: '3.3'
+networks:
+  net_app:
+    driver: bridge
+    
+services:
+  app1: 
+    image: rygo/system
+    privileged: true
+    ports: 
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./public/upload:/root/apps/public/upload:rw
+    restart: always
+    networks:
+      - net_app
