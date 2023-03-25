@@ -1,0 +1,55 @@
+# HTTP Server status
+#后台管理服务配置
+[admin]
+    #后台服务绑定地址和端口
+	address     = ":8080"
+	#后台服务静态资源目录
+	serverRoot  = "public"
+	#Swagger文件地址
+	swagger     = "http://rygo.com/static/swagger/swagger.json"
+#jwt配置
+[jwt]
+    #过期时间
+    timeout = 36000
+    #刷新时间
+    refresh = 18000
+    #安全密钥
+    encryptKey = "cm9ibm90ZQ=="
+# 日志配置
+[logger]
+    #日志保存路径
+    path        = "./data/log"
+    #日志级别
+    level       = 0
+    #标准输出流
+    stdout      = true
+
+# 定时任务
+[task]
+    #并发任务数
+    workPoolSize = 10
+
+# 数据库配置
+[database]
+    driver = "sqlite3"
+    #driver = "mysql"
+    #主数据库 
+    master  = "./data/rygo.db"
+    #master  = "root:root@tcp(45.80.184.102:13306)/rygo?charset=utf8"
+    #从数据库 如果为空则表示只使用主数据
+    slave = ""
+    #sql调试开关
+    debug = true
+    #sql日志目录
+    log = "/tmp/log/sql"
+
+# 代码生成配置
+[gen]
+    #生成作者
+    author        = "rygo"
+    #生成的模块名称
+    moduleName    = "module"
+    #生成的包名称
+    packageName   = "ry"
+    #是否去掉表前缀
+    autoRemovePre = true
