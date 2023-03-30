@@ -1,12 +1,12 @@
 /* ==========================================================================
- RYGO自动生成路由代码，只生成一次，按需修改,再次生成不会覆盖.
- 生成日期：{{.table.CreateTime}}
+ RYGO Code AutoGen  
+ create time：{{.table.CreateTime}}
  ==========================================================================*/
-package {{.table.BusinessName}}
+package controller
 
 import (
-	"{{.table.PackageName}}/app/controller/{{.table.BusinessName}}"
-	"{{.table.PackageName}}/app/service/middleware/auth"
+	"{{.table.PackageName}}/app/controller"
+	"{{.table.PackageName}}/app/middleware/auth"
 	"{{.table.PackageName}}/app/router"
 )
 

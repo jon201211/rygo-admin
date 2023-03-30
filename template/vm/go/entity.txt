@@ -1,9 +1,9 @@
 /* ==========================================================================
- RYGO自动生成数据库操作代码，无需手动修改，重新生成会自动覆盖.
- 生成日期：{{.table.CreateTime}}
+ RYGO Code AutoGen  
+ create time：{{.table.CreateTime}}
  ==========================================================================*/
 
-package {{.table.BusinessName}}
+package model
 
 import (
 	"{{.table.PackageName}}/app/db"

@@ -22,7 +22,7 @@ func (c *ConfigController) List(ctx *gin.Context) {
 
 //列表分页数据
 func (c *ConfigController) ListAjax(ctx *gin.Context) {
-	req := new(model.SelectPageReq)
+	req := new(model.ConfigSelectPageReq)
 	//获取参数
 	if err := ctx.ShouldBind(req); err != nil {
 		response.ErrorResp(ctx).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
@@ -132,7 +132,7 @@ func (c *ConfigController) Remove(ctx *gin.Context) {
 
 //导出
 func (c *ConfigController) Export(ctx *gin.Context) {
-	req := new(model.SelectPageReq)
+	req := new(model.ConfigSelectPageReq)
 	//获取参数
 	if err := ctx.ShouldBind(req); err != nil {
 		response.ErrorResp(ctx).Log("参数管理", req).WriteJsonExit()

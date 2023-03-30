@@ -1,8 +1,8 @@
 <!DOCTYPE html>    {{$treeParentCode := .table.TreeParentCode}} {{$treeCode :=.table.TreeCode}} {{$businessName :=.table.BusinessName}} {{$treeName :=.table.TreeName}}
 <!--
 ==========================================================================
-RYGO自动生成修改页面代码,只生成一次,按需修改.
-生成日期：{{.table.CreateTime}}
+RYGO Code AutoGen  
+create time：{{.table.CreateTime}}
 ==========================================================================
 -->
 <html lang="zh">

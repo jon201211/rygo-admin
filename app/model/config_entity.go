@@ -47,7 +47,7 @@ type ConfigEditReq struct {
 }
 
 //分页请求参数
-type SelectPageReq struct {
+type ConfigSelectPageReq struct {
 	ConfigName string `form:"configName"` //参数名称
 	ConfigKey  string `form:"configKey"`  //参数键名
 	ConfigType string `form:"configType"` //状态

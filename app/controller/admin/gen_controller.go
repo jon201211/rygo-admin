@@ -163,7 +163,7 @@ func (c *GenController) Preview(ctx *gin.Context) {
 	sqlValue := ""
 	entityKey := "vm/go/" + entity.BusinessName + "_entity.go.vm"
 	entityValue := ""
-	extendKey := "vm/go/" + entity.BusinessName + ".go.vm"
+	extendKey := "vm/go/" + entity.BusinessName + "_dao.go.vm"
 	extendValue := ""
 	serviceKey := "vm/go/" + entity.BusinessName + "_service.go.vm"
 	serviceValue := ""
@@ -283,39 +283,39 @@ func (c *GenController) GenCode(ctx *gin.Context) {
 	if tmp, err := service.TableService.LoadTemplate("vm/html/add.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/add.html"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//edit模板
 	if tmp, err := service.TableService.LoadTemplate("vm/html/edit.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/edit.html"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//list模板
 	if tmp, err := service.TableService.LoadTemplate(listTmp, gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", entity.BusinessName, "/list.html"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	if entity.TplCategory == "tree" {
@@ -323,13 +323,13 @@ func (c *GenController) GenCode(ctx *gin.Context) {
 		if tmp, err := service.TableService.LoadTemplate("vm/html/tree.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 			fileName := strings.Join([]string{curDir, "/template/", entity.ModuleName, "/", "tree.html"}, "")
 
-			if !file.Exists(fileName) {
-				f, err := file.Create(fileName)
-				if err == nil {
-					f.WriteString(tmp)
-				}
-				f.Close()
+			//if !file.Exists(fileName) {
+			f, err := file.Create(fileName)
+			if err == nil {
+				f.WriteString(tmp)
 			}
+			f.Close()
+			//}
 		}
 	}
 
@@ -351,65 +351,65 @@ func (c *GenController) GenCode(ctx *gin.Context) {
 	if tmp, err := service.TableService.LoadTemplate("vm/go/dao.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/app/dao/", entity.BusinessName, "_dao.go"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//service模板
 	if tmp, err := service.TableService.LoadTemplate("vm/go/service.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/app/service/", entity.BusinessName, "_service.go"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//router模板
 	if tmp, err := service.TableService.LoadTemplate("vm/go/router.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/app/controller/", entity.BusinessName, "_router.go"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//controller模板
 	if tmp, err := service.TableService.LoadTemplate("vm/go/controller.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/app/controller/", "admin", "/", entity.BusinessName, "_controller.go"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 
 	//sql模板
 	if tmp, err := service.TableService.LoadTemplate("vm/sql/sql.txt", gin.H{"table": entity, "BigBusinessName": BigBusinessName}); err == nil {
 		fileName := strings.Join([]string{curDir, "/data/sql/", entity.ModuleName, "/", entity.BusinessName, "_menu.sql"}, "")
 
-		if !file.Exists(fileName) {
-			f, err := file.Create(fileName)
-			if err == nil {
-				f.WriteString(tmp)
-			}
-			f.Close()
+		//if !file.Exists(fileName) {
+		f, err := file.Create(fileName)
+		if err == nil {
+			f.WriteString(tmp)
 		}
+		f.Close()
+		//}
 	}
 	response.SucessResp(ctx).Log("生成代码", gin.H{"tableId": tableId}).WriteJsonExit()
 }

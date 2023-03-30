@@ -72,7 +72,7 @@ func (d *configDao) FindNotIn(column string, args ...interface{}) ([]model.SysCo
 }
 
 //根据条件分页查询数据
-func (d *configDao) SelectListByPage(param *model.SelectPageReq) ([]model.SysConfig, *page.Paging, error) {
+func (d *configDao) SelectListByPage(param *model.ConfigSelectPageReq) ([]model.SysConfig, *page.Paging, error) {
 	db := db.Instance().Engine()
 	p := new(page.Paging)
 	if db == nil {
@@ -121,7 +121,7 @@ func (d *configDao) SelectListByPage(param *model.SelectPageReq) ([]model.SysCon
 }
 
 // 导出excel
-func (d *configDao) SelectListExport(param *model.SelectPageReq, head, col []string) (string, error) {
+func (d *configDao) SelectListExport(param *model.ConfigSelectPageReq, head, col []string) (string, error) {
 	db := db.Instance().Engine()
 
 	if db == nil {
@@ -161,7 +161,7 @@ func (d *configDao) SelectListExport(param *model.SelectPageReq, head, col []str
 }
 
 //获取所有数据
-func (d *configDao) SelectListAll(param *model.SelectPageReq) ([]model.SysConfig, error) {
+func (d *configDao) SelectListAll(param *model.ConfigSelectPageReq) ([]model.SysConfig, error) {
 	db := db.Instance().Engine()
 
 	if db == nil {

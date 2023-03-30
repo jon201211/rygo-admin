@@ -1,8 +1,8 @@
-// ==========================================================================
-// RYGO auto gen code!
-// datetime：{{.table.CreateTime}}
-// ==========================================================================
-package {{.table.BusinessName}}
+/* ==========================================================================
+ RYGO Code AutoGen  
+ create time：{{.table.CreateTime}}
+ ==========================================================================*/
+package service
 
 import (
 	"errors"
@@ -27,15 +27,15 @@ type {{.table.BusinessName}}Service struct {
 
 
 //根据主键查询数据
-func (s *{{.table.BusinessName}}Service) SelectRecordById(id {{.table.PkColumn.GoType}}) (*model.{{.table.BusinessName}}{{.table.ClassName}}, error) {
-	entity := &model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
-	_, err := dao.{{.table.BusinessName}}Dao.FindOne(entity)
+func (s *{{.table.BusinessName}}Service) SelectRecordById(id {{.table.PkColumn.GoType}}) (*model.{{.BigBusinessName}}Entity, error) {
+	entity := &model.{{.BigBusinessName}}Entity{ {{.table.PkColumn.GoField}}: id}
+	_, err := dao.{{.BigBusinessName}}Dao.FindOne(entity)
 	return entity, err
 }
 
 //根据主键删除数据
 func (s *{{.table.BusinessName}}Service) DeleteRecordById(id {{.table.PkColumn.GoType}}) bool {
-	rs, err := (&model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}).Delete()
+	rs, err := (&model.{{.BigBusinessName}}Entity{ {{.table.PkColumn.GoField}}: id}).Delete()
 	if err == nil {
 		if rs > 0 {
 			return true
@@ -47,7 +47,7 @@ func (s *{{.table.BusinessName}}Service) DeleteRecordById(id {{.table.PkColumn.G
 //批量删除数据记录
 func (s *{{.table.BusinessName}}Service) DeleteRecordByIds(ids string) int64 {
 	ida := convert.ToInt64Array(ids, ",")
-	result, err := dao.{{.table.BusinessName}}Dao.DeleteBatch(ida...)
+	result, err := dao.{{.BigBusinessName}}Dao.DeleteBatch(ida...)
 	if err != nil {
 		return 0
 	}
@@ -55,8 +55,8 @@ func (s *{{.table.BusinessName}}Service) DeleteRecordByIds(ids string) int64 {
 }
 
 //添加数据
-func (s *{{.table.BusinessName}}Service) AddSave(req *model.{{.table.BusinessName}}AddReq, ctx *gin.Context) ({{.table.PkColumn.GoType}}, error) {
-	var entity model.{{.table.BusinessName}}{{.table.ClassName}}
+func (s *{{.table.BusinessName}}Service) AddSave(req *model.{{.BigBusinessName}}AddReq, ctx *gin.Context) ({{.table.PkColumn.GoType}}, error) {
+	var entity model.{{.BigBusinessName}}Entity
 	{{range $index, $column := .table.Columns}} {{if eq $column.IsInsert "1"}}
 	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
 	entity.CreateTime = time.Now()
@@ -68,14 +68,14 @@ func (s *{{.table.BusinessName}}Service) AddSave(req *model.{{.table.BusinessNam
 		entity.CreateBy = user.LoginName
 	}
 
-	_, err := entity.Insert()
+	_, err := dao.{{.BigBusinessName}}Dao.Insert(&entity)
 	return entity.{{.table.PkColumn.GoField}}, err
 }
 
 //修改数据
-func (s *{{.table.BusinessName}}Service) EditSave(req *model.{{.table.BusinessName}}EditReq, ctx *gin.Context) (int64, error) {
-	entity := &model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
-	ok, err := dao.{{.table.BusinessName}}Dao.FindOne(entity)
+func (s *{{.table.BusinessName}}Service) EditSave(req *model.{{.BigBusinessName}}EditReq, ctx *gin.Context) (int64, error) {
+	entity := &model.{{.BigBusinessName}}Entity{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
+	ok, err := dao.{{.BigBusinessName}}Dao.FindOne(entity)
 
 	if err != nil {
 		return 0, err
@@ -96,22 +96,22 @@ func (s *{{.table.BusinessName}}Service) EditSave(req *model.{{.table.BusinessNa
 		entity.UpdateBy = user.LoginName
 	}
 
-	return entity.Update()
+	return dao.{{.BigBusinessName}}Dao.Update(&entity)
 }
 
 //根据条件查询数据
-func (s *{{.table.BusinessName}}Service) SelectListAll(params *model.{{.table.BusinessName}}SelectPageReq) ([]model.{{.table.BusinessName}}{{.table.ClassName}}, error) {
-	return dao.{{.table.BusinessName}}Dao.SelectListAll(params)
+func (s *{{.table.BusinessName}}Service) SelectListAll(params *model.{{.BigBusinessName}}SelectPageReq) ([]model.{{.BigBusinessName}}Entity, error) {
+	return dao.{{.BigBusinessName}}Dao.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func (s *{{.table.BusinessName}}Service) (s *{{.table.BusinessName}}Service) SelectListByPage(params *model.{{.table.BusinessName}}SelectPageReq) ([]model.{{.table.BusinessName}}{{.table.ClassName}}, *page.Paging, error) {
-	return dao.{{.table.BusinessName}}Dao.SelectListByPage(params)
+func (s *{{.table.BusinessName}}Service) SelectListByPage(params *model.{{.table.BusinessName}}SelectPageReq) ([]model.{{.BigBusinessName}}Entity, *page.Paging, error) {
+	return dao.{{.BigBusinessName}}Dao.SelectListByPage(params)
 }
 
 // 导出excel
 func (s *{{.table.BusinessName}}Service) Export(param *model.{{.table.BusinessName}}SelectPageReq) (string, error) {
 	head := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
 	col := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnName}}"{{else}},"{{$column.ColumnName}}"{{end}}{{end}}}
-	return dao.{{.table.BusinessName}}Dao.SelectListExport(param, head, col)
+	return dao.{{.BigBusinessName}}Dao.SelectListExport(param, head, col)
 }

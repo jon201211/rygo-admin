@@ -165,17 +165,17 @@ func (s *configService) EditSave(req *model.ConfigEditReq, ctx *gin.Context) (in
 }
 
 //根据条件分页查询角色数据
-func (s *configService) SelectListAll(params *model.SelectPageReq) ([]model.SysConfig, error) {
+func (s *configService) SelectListAll(params *model.ConfigSelectPageReq) ([]model.SysConfig, error) {
 	return dao.ConfigDao.SelectListAll(params)
 }
 
 //根据条件分页查询角色数据
-func (s *configService) SelectListByPage(params *model.SelectPageReq) ([]model.SysConfig, *page.Paging, error) {
+func (s *configService) SelectListByPage(params *model.ConfigSelectPageReq) ([]model.SysConfig, *page.Paging, error) {
 	return dao.ConfigDao.SelectListByPage(params)
 }
 
 // 导出excel
-func (s *configService) Export(param *model.SelectPageReq) (string, error) {
+func (s *configService) Export(param *model.ConfigSelectPageReq) (string, error) {
 	head := []string{"参数主键", "参数名称", "参数键名", "参数键值", "系统内置（Y是 N否）", "状态"}
 	col := []string{"config_id", "config_name", "config_key", "config_value", "config_type"}
 	return dao.ConfigDao.SelectListExport(param, head, col)
