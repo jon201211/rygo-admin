@@ -1,10 +1,13 @@
 package session
 
 import (
-	"github.com/gin-gonic/gin"
+	"rygo/app/dao"
 	"rygo/app/global"
-	userModel "rygo/app/model/system/user"
+	"rygo/app/model"
+
 	"sync"
+
+	"github.com/gin-gonic/gin"
 )
 
 //用户session列表
@@ -19,7 +22,7 @@ func IsAdmin(userId int64) bool {
 	}
 }
 
-func IsAdminUser(user *userModel.SysUser) bool {
+func IsAdminUser(user *model.SysUser) bool {
 	if user.UserId == 1 {
 		return true
 	} else {
@@ -28,8 +31,8 @@ func IsAdminUser(user *userModel.SysUser) bool {
 }
 
 // 判断用户是否已经登录
-func IsSignedIn(c *gin.Context) bool {
-	_, exist := c.Get(global.USER_ID)
+func IsSignedIn(ctx *gin.Context) bool {
+	_, exist := ctx.Get(global.USER_ID)
 	if exist {
 		return true
 	}
@@ -37,14 +40,14 @@ func IsSignedIn(c *gin.Context) bool {
 }
 
 // 获得用户信息详情
-func GetProfile(c *gin.Context) *userModel.SysUser {
-	userId, exist := c.Get(global.USER_ID)
+func GetProfile(ctx *gin.Context) *model.SysUser {
+	userId, exist := ctx.Get(global.USER_ID)
 	if exist == false {
 		return nil
 	}
-	user := userModel.SysUser{}
+	user := model.SysUser{}
 	user.UserId = userId.(int64)
-	_, err := user.FindOne()
+	_, err := dao.UserDao.FindOne(&user)
 	if err != nil {
 		return nil
 	}
@@ -56,7 +59,7 @@ func GetProfile(c *gin.Context) *userModel.SysUser {
 }
 
 // 获得用户信息详情
-func GetTenantId(c *gin.Context) int64 {
-	u := GetProfile(c)
+func GetTenantId(ctx *gin.Context) int64 {
+	u := GetProfile(ctx)
 	return u.TenantId
 }

@@ -1,0 +1,193 @@
+/* ==========================================================================
+ RYGO自动生成model扩展代码列表、增、删，改、查、导出，只生成一次，按需修改,再次生成不会覆盖.
+ 生成日期：{{.table.CreateTime}}
+ ==========================================================================*/
+package {{.table.BusinessName}}
+
+import (
+	"errors"
+    "xorm.io/builder"
+    "{{.table.PackageName}}/app/db"
+    "{{.table.PackageName}}/app/utils/excel"
+    "{{.table.PackageName}}/app/utils/page"
+)
+
+var {{.BigBusinessName}}Dao = new{{.BigBusinessName}}Dao()
+
+func new{{.BigBusinessName}}Dao() *{{.table.ClassName}}Dao {
+	return &{{.table.ClassName}}Dao{}
+}
+
+type {{.table.ClassName}}Dao struct {
+}
+
+//映射数据表
+func (d *{{.table.ClassName}}Dao) TableName() string {
+	return "{{.table.TableName}}"
+}
+
+// 插入数据
+func (d *{{.table.ClassName}}Dao)  Insert(e *{{.table.ClassName}}) (int64, error) {
+	return db.Instance().Engine().Table(d.TableName()).Insert(e)
+}
+
+// 更新数据
+func (d *{{.table.ClassName}}Dao) Update(e *{{.table.ClassName}}) (int64, error) {
+	return db.Instance().Engine().Table(d.TableName()).ID(e.{{.table.PkColumn.GoField}}).Update(e)
+}
+
+// 删除
+func (d *{{.table.ClassName}}Dao) Delete(e *{{.table.ClassName}}) (int64, error) {
+	return db.Instance().Engine().Table(d.TableName()).ID(e.{{.table.PkColumn.GoField}}).Delete(e)
+}
+
+//批量删除
+func (d *{{.table.ClassName}}Dao) DeleteBatch(ids ...int64) (int64, error) {
+	return db.Instance().Engine().Table(d.TableName()).In("{{.table.PkColumn.ColumnName}}", ids).Delete(new({{.table.ClassName}}))
+}
+
+// 根据结构体中已有的非空数据来获得单条数据
+func (d *{{.table.ClassName}}Dao)  FindOne(e *{{.table.ClassName}}) (bool, error) {
+	return db.Instance().Engine().Table(d.TableName()).Get(e)
+}
+
+// 根据条件查询
+func (d *{{.table.ClassName}}Dao) Find(where, order string) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(d.TableName()).Where(where).OrderBy(order).Find(&list)
+	return list, err
+}
+
+//指定字段集合查询
+func (d *{{.table.ClassName}}Dao) FindIn(column string, args ...interface{}) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(d.TableName()).In(column, args).Find(&list)
+	return list, err
+}
+
+//排除指定字段集合查询
+func (d *{{.table.ClassName}}Dao) FindNotIn(column string, args ...interface{}) ([]{{.table.ClassName}}, error) {
+	var list []{{.table.ClassName}}
+	err := db.Instance().Engine().Table(d.TableName()).NotIn(column, args).Find(&list)
+	return list, err
+}
+
+//根据条件分页查询数据
+func (d *{{.table.ClassName}}Dao) SelectListByPage(param *{{.table.ClassName}}SelectPageReq) ([]{{.table.ClassName}}, *page.Paging, error) {
+	db := db.Instance().Engine()
+    p := new(page.Paging)
+
+	if db == nil {
+		return nil, p, errors.New("获取数据库连接失败")
+	}
+
+	model := db.Table("{{.table.TableName}}").Alias("t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} like ?", "%"+param.{{$column.GoField}}+"%")
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		}
+		{{end}} {{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			model.Where("t.create_time >= ?", param.BeginTime)
+		}
+
+		if param.EndTime != "" {
+			 model.Where("t.create_time<=?", param.EndTime)
+		}
+	}
+
+	total, err := model.Clone().Count()
+	if err != nil {
+		return nil, p, errors.New("读取行数失败")
+	}
+
+	p = page.CreatePaging(param.PageNum, param.PageSize, int(total))
+	model.Limit(p.Pagesize, p.StartNum)
+
+	var result []{{.table.ClassName}}
+    err = model.Find(&result)
+    return result, p, err
+}
+
+// 导出excel
+func (d *{{.table.ClassName}}Dao) SelectListExport(param *{{.table.ClassName}}SelectPageReq, head, col []string) (string, error) {
+	db := db.Instance().Engine()
+
+	if db == nil {
+		return "", errors.New("获取数据库连接失败")
+	}
+
+	build := builder.Select(col...).From("{{.table.TableName}}", "t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			build.Where(builder.Like{"t.{{$column.ColumnName}}", param.{{$column.GoField}}})
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			build.Where(builder.Eq{"t.{{$column.ColumnName}}": param.{{$column.GoField}}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			build.Where(builder.Eq{"t.{{$column.ColumnName}}": param.{{$column.GoField}}})
+		}
+		{{end}} {{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			build.Where(builder.Gte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.BeginTime + "','%y%m%d')"})
+		}
+
+		if param.EndTime != "" {
+			build.Where(builder.Lte{"date_format(t.create_time,'%y%m%d')": "date_format('" + param.EndTime + "','%y%m%d')"})
+		}
+	}
+
+	sqlStr, _, _ := build.ToSQL()
+	arr, err := db.SQL(sqlStr).QuerySliceString()
+
+	path, err := excel.DownlaodExcel(head, arr)
+
+	return path, err
+}
+
+//获取所有数据
+func (d *{{.table.ClassName}}Dao) SelectListAll(param *{{.table.ClassName}}SelectPageReq) ([]{{.table.ClassName}}, error) {
+	db := db.Instance().Engine()
+
+	if db == nil {
+		return nil, errors.New("获取数据库连接失败")
+	}
+
+	model := db.Table("{{.table.TableName}}").Alias("t")
+
+	if param != nil { {{range $index, $column := .table.Columns}} {{if eq $column.IsQuery "1"}}
+		{{if eq $column.QueryType "LIKE"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} like ?", "%"+param.{{$column.GoField}}+"%")
+		} {{else if eq $column.QueryType "EQ"}} {{if eq $column.GoType "string"}}
+		if param.{{$column.GoField}} != "" {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		} {{else if eq $column.GoType "int" "int64"}}
+		if param.{{$column.GoField}} != 0 {
+			model.Where("t.{{$column.ColumnName}} = ?", param.{{$column.GoField}})
+		}{{end}}
+		{{end}} {{end}} {{end}}
+		if param.BeginTime != "" {
+			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+		}
+
+		if param.EndTime != "" {
+			model.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+		}
+	}
+
+	var result []{{.table.ClassName}}
+	err := model.Find(&result)
+	return result, err
+}

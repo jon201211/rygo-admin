@@ -5,15 +5,13 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"rygo/app/cfg"
 	"rygo/app/common/util"
 	_ "rygo/app/controller"
-	"rygo/app/ginframe/cfg"
-	"rygo/app/ginframe/db"
-	"rygo/app/ginframe/server"
-	"rygo/app/model/module/tenant"
-	"rygo/app/model/system/dept"
-	"rygo/app/model/system/post"
-	"rygo/app/model/system/user"
+	"rygo/app/db"
+	"rygo/app/model"
+
+	"rygo/app/server"
 	"sync/atomic"
 	"syscall"
 	"time"
@@ -39,7 +37,7 @@ func main() {
 		fmt.Printf("参数错误")
 		return
 	}
-	db.Instance().Engine().Sync2(dept.SysDept{}, tenant.SysTenant{}, user.SysUser{}, post.SysPost{})
+	db.Instance().Engine().Sync2(model.SysDept{}, model.SysTenant{}, model.SysUser{}, model.SysPost{})
 	//后台服务状态
 	admin := server.New("admin", config.Admin.Address)
 	admin.Template("template").Static(config.Admin.ServerRoot)

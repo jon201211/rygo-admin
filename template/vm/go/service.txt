@@ -1,8 +1,6 @@
 // ==========================================================================
-// RYGO自动生成业务逻辑层相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：{{.table.CreateTime}}
-// 生成路径: app/service/{{.table.ModuleName}}/{{.table.BusinessName}}/{{.table.BusinessName}}_service.go
-// 生成人：{{.table.FunctionAuthor}}
+// RYGO auto gen code!
+// datetime：{{.table.CreateTime}}
 // ==========================================================================
 package {{.table.BusinessName}}
 
@@ -10,22 +8,34 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"time"
-	{{.table.BusinessName}}Model "{{.table.PackageName}}/app/model/{{.table.ModuleName}}/{{.table.BusinessName}}"
-	userService "{{.table.PackageName}}/app/service/system/user"
-	"{{.table.PackageName}}/app/ginframe/utils/convert"
-	"{{.table.PackageName}}/app/ginframe/utils/page"
+	{{.table.PackageName}}/app/model
+	{{.table.PackageName}}/app/dao
+
+	"{{.table.PackageName}}/app/utils/convert"
+	"{{.table.PackageName}}/app/utils/page"
 )
 
+
+var {{.BigBusinessName}}Service = new{{.BigBusinessName}}Service()
+
+func new{{.BigBusinessName}}Service() *{{.table.BusinessName}}Service {
+	return &{{.table.BusinessName}}Service{}
+}
+
+type {{.table.BusinessName}}Service struct {
+}
+
+
 //根据主键查询数据
-func SelectRecordById(id {{.table.PkColumn.GoType}}) (*{{.table.BusinessName}}Model.{{.table.ClassName}}, error) {
-	entity := &{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
-	_, err := entity.FindOne()
+func (s *{{.table.BusinessName}}Service) SelectRecordById(id {{.table.PkColumn.GoType}}) (*model.{{.table.BusinessName}}{{.table.ClassName}}, error) {
+	entity := &model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}
+	_, err := dao.{{.table.BusinessName}}Dao.FindOne(entity)
 	return entity, err
 }
 
 //根据主键删除数据
-func DeleteRecordById(id {{.table.PkColumn.GoType}}) bool {
-	rs, err := (&{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}).Delete()
+func (s *{{.table.BusinessName}}Service) DeleteRecordById(id {{.table.PkColumn.GoType}}) bool {
+	rs, err := (&model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: id}).Delete()
 	if err == nil {
 		if rs > 0 {
 			return true
@@ -35,9 +45,9 @@ func DeleteRecordById(id {{.table.PkColumn.GoType}}) bool {
 }
 
 //批量删除数据记录
-func DeleteRecordByIds(ids string) int64 {
+func (s *{{.table.BusinessName}}Service) DeleteRecordByIds(ids string) int64 {
 	ida := convert.ToInt64Array(ids, ",")
-	result, err := {{.table.BusinessName}}Model.DeleteBatch(ida...)
+	result, err := dao.{{.table.BusinessName}}Dao.DeleteBatch(ida...)
 	if err != nil {
 		return 0
 	}
@@ -45,14 +55,14 @@ func DeleteRecordByIds(ids string) int64 {
 }
 
 //添加数据
-func AddSave(req *{{.table.BusinessName}}Model.AddReq, c *gin.Context) ({{.table.PkColumn.GoType}}, error) {
-	var entity {{.table.BusinessName}}Model.{{.table.ClassName}}
+func (s *{{.table.BusinessName}}Service) AddSave(req *model.{{.table.BusinessName}}AddReq, ctx *gin.Context) ({{.table.PkColumn.GoType}}, error) {
+	var entity model.{{.table.BusinessName}}{{.table.ClassName}}
 	{{range $index, $column := .table.Columns}} {{if eq $column.IsInsert "1"}}
 	entity.{{$column.GoField}} = req.{{$column.GoField}}{{end}} {{end}}
 	entity.CreateTime = time.Now()
 	entity.CreateBy = ""
 
-	user := userService.GetProfile(c)
+	user := UserService.GetProfile(ctx)
 
 	if user != nil {
 		entity.CreateBy = user.LoginName
@@ -63,9 +73,9 @@ func AddSave(req *{{.table.BusinessName}}Model.AddReq, c *gin.Context) ({{.table
 }
 
 //修改数据
-func EditSave(req *{{.table.BusinessName}}Model.EditReq, c *gin.Context) (int64, error) {
-	entity := &{{.table.BusinessName}}Model.{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
-	ok, err := entity.FindOne()
+func (s *{{.table.BusinessName}}Service) EditSave(req *model.{{.table.BusinessName}}EditReq, ctx *gin.Context) (int64, error) {
+	entity := &model.{{.table.BusinessName}}{{.table.ClassName}}{ {{.table.PkColumn.GoField}}: req.{{.table.PkColumn.GoField}} }
+	ok, err := dao.{{.table.BusinessName}}Dao.FindOne(entity)
 
 	if err != nil {
 		return 0, err
@@ -80,7 +90,7 @@ func EditSave(req *{{.table.BusinessName}}Model.EditReq, c *gin.Context) (int64,
 	entity.UpdateTime = time.Now()
 	entity.UpdateBy = ""
 
-	user := userService.GetProfile(c)
+	user := UserService.GetProfile(ctx)
 
 	if user == nil {
 		entity.UpdateBy = user.LoginName
@@ -90,18 +100,18 @@ func EditSave(req *{{.table.BusinessName}}Model.EditReq, c *gin.Context) (int64,
 }
 
 //根据条件查询数据
-func SelectListAll(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.{{.table.ClassName}}, error) {
-	return {{.table.BusinessName}}Model.SelectListAll(params)
+func (s *{{.table.BusinessName}}Service) SelectListAll(params *model.{{.table.BusinessName}}SelectPageReq) ([]model.{{.table.BusinessName}}{{.table.ClassName}}, error) {
+	return dao.{{.table.BusinessName}}Dao.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListByPage(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.{{.table.ClassName}}, *page.Paging, error) {
-	return {{.table.BusinessName}}Model.SelectListByPage(params)
+func (s *{{.table.BusinessName}}Service) (s *{{.table.BusinessName}}Service) SelectListByPage(params *model.{{.table.BusinessName}}SelectPageReq) ([]model.{{.table.BusinessName}}{{.table.ClassName}}, *page.Paging, error) {
+	return dao.{{.table.BusinessName}}Dao.SelectListByPage(params)
 }
 
 // 导出excel
-func Export(param *{{.table.BusinessName}}Model.SelectPageReq) (string, error) {
+func (s *{{.table.BusinessName}}Service) Export(param *model.{{.table.BusinessName}}SelectPageReq) (string, error) {
 	head := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
 	col := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnName}}"{{else}},"{{$column.ColumnName}}"{{end}}{{end}}}
-	return {{.table.BusinessName}}Model.SelectListExport(param, head, col)
+	return dao.{{.table.BusinessName}}Dao.SelectListExport(param, head, col)
 }

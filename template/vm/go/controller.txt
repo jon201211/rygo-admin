@@ -1,27 +1,30 @@
-// ==========================================================================
-// RYGO自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
-// 生成日期：{{.table.CreateTime}}
-// 生成路径: app/controller/{{.table.ModuleName}}/{{.table.BusinessName}}/{{.table.BusinessName}}_controller.go
-// 生成人：{{.table.FunctionAuthor}}
-// ==========================================================================
+/* ==========================================================================
+ RYGO自动生成控制器相关代码，只生成一次，按需修改,再次生成不会覆盖.
+ 生成日期：{{.table.CreateTime}}
+ ==========================================================================*/
 package {{.table.BusinessName}}
 
 import (
 	"github.com/gin-gonic/gin"
+	"{{.table.PackageName}}/app/controller/base"
+
 	"{{.table.PackageName}}/app/model"
-	{{.table.BusinessName}}Model "{{.table.PackageName}}/app/model/{{.table.ModuleName}}/{{.table.BusinessName}}"
-	{{.table.BusinessName}}Service "{{.table.PackageName}}/app/service/{{.table.ModuleName}}/{{.table.BusinessName}}"
-	"{{.table.PackageName}}/app/ginframe/response"
-	"{{.table.PackageName}}/app/ginframe/utils/gconv"
+	"{{.table.PackageName}}/app/service"
+	"{{.table.PackageName}}/app/response"
+	"{{.table.PackageName}}/app/utils/gconv"
 )
 
+type {{.BigBusinessName}}Controller struct {
+	base.BaseController
+}
+
 //列表页
-func List(c *gin.Context) {
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTpl()
+func (c* {{.BigBusinessName}}Controller) List(ctx *gin.Context) {
+	response.BuildTpl(c, "{{.table.BusinessName}}/list.html").WriteTpl()
 }
 
 //列表分页数据
-func ListAjax(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) ListAjax(ctx *gin.Context) {
 	req := new({{.table.BusinessName}}Model.SelectPageReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
@@ -29,7 +32,7 @@ func ListAjax(c *gin.Context) {
 		return
 	}
 	rows := make([]{{.table.BusinessName}}Model.{{.table.ClassName}}, 0)
-	result, page, err := {{.table.BusinessName}}Service.SelectListByPage(req)
+	result, page, err := service.{{.table.BusinessName}}Service.SelectListByPage(req)
 
 	if err == nil && len(result) > 0 {
 		rows = result
@@ -39,12 +42,12 @@ func ListAjax(c *gin.Context) {
 }
 
 //新增页面
-func Add(c *gin.Context) {
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTpl()
+func (c* {{.BigBusinessName}}Controller) Add(ctx *gin.Context) {
+	response.BuildTpl(c, "{{.table.BusinessName}}/add.html").WriteTpl()
 }
 
 //新增页面保存
-func AddSave(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) AddSave(ctx *gin.Context) {
 	req := new({{.table.BusinessName}}Model.AddReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
@@ -52,7 +55,7 @@ func AddSave(c *gin.Context) {
 		return
 	}
 
-	id, err := {{.table.BusinessName}}Service.AddSave(req, c)
+	id, err := service.{{.table.BusinessName}}Service.AddSave(req, c)
 
 	if err != nil || id <= 0 {
 		response.ErrorResp(c).SetBtype(model.Buniss_Add).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
@@ -62,7 +65,7 @@ func AddSave(c *gin.Context) {
 }
 
 //修改页面
-func Edit(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) Edit(ctx *gin.Context) {
 	id := gconv.Int64(c.Query("id"))
 
 	if id <= 0 {
@@ -72,7 +75,7 @@ func Edit(c *gin.Context) {
 		return
 	}
 
-	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
+	entity, err := service.{{.table.BusinessName}}Service.SelectRecordById(id)
 
 	if err != nil || entity == nil {
 		response.ErrorTpl(c).WriteTpl(gin.H{
@@ -81,13 +84,13 @@ func Edit(c *gin.Context) {
 		return
 	}
 
-	response.BuildTpl(c, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
+	response.BuildTpl(c, "{{.table.BusinessName}}/edit.html").WriteTpl(gin.H{
 		"{{.table.BusinessName}}": entity,
 	})
 }
 
 //修改页面保存
-func EditSave(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) EditSave(ctx *gin.Context) {
 	req := new({{.table.BusinessName}}Model.EditReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
@@ -95,7 +98,7 @@ func EditSave(c *gin.Context) {
 		return
 	}
 
-	rs, err := {{.table.BusinessName}}Service.EditSave(req, c)
+	rs, err := service.{{.table.BusinessName}}Service.EditSave(req, c)
 
 	if err != nil || rs <= 0 {
 		response.ErrorResp(c).SetBtype(model.Buniss_Edit).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
@@ -105,7 +108,7 @@ func EditSave(c *gin.Context) {
 }
 
 //删除数据
-func Remove(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) Remove(ctx *gin.Context) {
 	req := new(model.RemoveReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
@@ -113,7 +116,7 @@ func Remove(c *gin.Context) {
 		return
 	}
 
-	rs := {{.table.BusinessName}}Service.DeleteRecordByIds(req.Ids)
+	rs := service.{{.table.BusinessName}}Service.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
 		response.SucessResp(c).SetBtype(model.Buniss_Del).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
@@ -123,14 +126,14 @@ func Remove(c *gin.Context) {
 }
 
 //导出
-func Export(c *gin.Context) {
+func (c* {{.BigBusinessName}}Controller) Export(ctx *gin.Context) {
 	req := new({{.table.BusinessName}}Model.SelectPageReq)
 	//获取参数
 	if err := c.ShouldBind(req); err != nil {
 		response.ErrorResp(c).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
 		return
 	}
-	url, err := {{.table.BusinessName}}Service.Export(req)
+	url, err := service.{{.table.BusinessName}}Service.Export(req)
 
 	if err != nil {
 		response.ErrorResp(c).SetBtype(model.Buniss_Other).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
