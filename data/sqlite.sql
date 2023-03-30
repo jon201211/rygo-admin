@@ -25,7 +25,7 @@ CREATE TABLE `gen_table` (
 
 
 
-INSERT INTO `gen_table` VALUES ('5', 'sys_config', '参数配置表', 'config', 'crud', 'rygo-app', 'module', 'config', '参数配置', 'rygo', '', 'admin', '2020-03-26 20:35:17', 'admin', '2020-03-27 09:49:22', '455445454');
+INSERT INTO `gen_table` VALUES ('5', 'sys_config', '参数配置表', 'config', 'crud', 'rygo', 'module', 'config', '参数配置', 'rygo', '', 'admin', '2020-03-26 20:35:17', 'admin', '2020-03-27 09:49:22', '455445454');
 
 
 
